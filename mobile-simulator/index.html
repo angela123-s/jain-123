@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenQL | Foundations of Data Optimization</title>
+    <link rel="stylesheet" href="styles.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="layout">
+        <!-- Dashboard / Info Panel (Left) -->
+        <div class="dashboard">
+            <header class="dash-header">
+                <div class="logo">
+                    <div class="logo-mark">A</div>
+                    <div class="logo-text">
+                        <h1>GreenQL</h1>
+                        <p class="tagline">Foundations of Data Optimization</p>
+                    </div>
+                </div>
+                <div class="status">
+                    <span class="status-dot pulse"></span>
+                    <span class="ip">Live Node: 10.10.22.206</span>
+                </div>
+            </header>
+
+            <!-- Comparison UI -->
+            <div class="comparison-container">
+                <div class="panel">
+                    <h3>❌ Without Optimizer</h3>
+                    <div class="value-group"><span id="directSize" class="value">-</span> <span
+                            class="unit">bytes</span></div>
+                    <div class="value-group"><span id="directTime" class="value">-</span> <span class="unit">ms</span>
+                    </div>
+                </div>
+                <!-- With Optimizer -->
+                <div class="panel">
+                    <h3>✅ With Optimizer</h3>
+                    <div class="value-group"><span id="optimizedSize" class="value">-</span> <span
+                            class="unit">bytes</span></div>
+                    <div class="value-group"><span id="optimizedTime" class="value">-</span> <span
+                            class="unit">ms</span></div>
+                </div>
+            </div>
+
+            <!-- Savings Visualization -->
+            <div id="mainSavingsContainer" class="circular-savings-container">
+                <div class="large-donut-chart" id="mainSavingsDonut">
+                    <div class="inner-circle">
+                        <span id="mainSavingsPercent" class="percent-text">0%</span>
+                        <span class="label-text">Bandwidth Saved</span>
+                    </div>
+                </div>
+                <p class="savings-subtext">
+                    <span id="mainSavedBytes">0</span> bytes saved out of <span id="mainTotalBytes">0</span> bytes
+                </p>
+            </div>
+
+            <!-- Bento Grid -->
+            <div class="metrics-bento-grid">
+                <div class="bento-item">
+                    <div class="bento-label">Fields Requested</div>
+                    <div id="tbl-fields-req" class="bento-value">-</div>
+                    <div class="bento-sub">Full Object Spec</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Fields Used</div>
+                    <div id="tbl-fields-used" class="bento-value">-</div>
+                    <div class="bento-sub">Optimized Load</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Fields Unused</div>
+                    <div id="tbl-fields-unused" class="bento-value">-</div>
+                    <div class="bento-sub">Redundant Data</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Original Payload</div>
+                    <div id="tbl-orig-payload" class="bento-value">-</div>
+                    <div class="bento-sub">Raw Bytes</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Optimized Payload</div>
+                    <div id="tbl-opt-payload" class="bento-value">-</div>
+                    <div class="bento-sub">Minimized Bytes</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Payload Reduction</div>
+                    <div id="tbl-reduction" class="bento-value">-</div>
+                    <div class="bento-sub">Total Overfetch Saved</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Optimization Ratio</div>
+                    <div id="tbl-opt-ratio" class="bento-value">-</div>
+                    <div class="bento-sub">Efficiency Factor</div>
+                </div>
+                <div class="bento-item">
+                    <div class="bento-label">Over-Fetching Factor</div>
+                    <div id="tbl-overfetch" class="bento-value">-</div>
+                    <div class="bento-sub">Eliminated Weight</div>
+                </div>
+                <div class="bento-item score">
+                    <div class="score-group">
+                        <div class="bento-label">Data Efficiency</div>
+                        <div class="bento-sub">GreenQL Score</div>
+                    </div>
+                    <div id="tbl-efficiency" class="bento-value">-</div>
+                </div>
+            </div>
+
+
+
+
+            <!-- JSON Viewer -->
+            <div class="json-viewer axiom-border">
+                <div class="json-header">
+                    <h3>GREENQL_RESPONSE_STREAM_V1</h3>
+                    <div class="json-controls">
+                        <button id="toggleJsonBtn" class="text-btn">Hide</button>
+                    </div>
+                </div>
+                <pre id="jsonOutput" class="code-block"></pre>
+            </div>
+        </div>
+
+        <!-- Phone Simulator (Right) -->
+        <div class="phone-container">
+            <div class="phone">
+                <div class="notch"></div>
+                <div class="screen">
+                    <header class="app-header">
+                        <div class="status-bar">
+                            <div class="status-left">9:41</div>
+                            <div class="status-right">
+                                <span class="wifi-icon">📶</span>
+                                <span class="battery-icon">🔋</span>
+                            </div>
+                        </div>
+                        <div class="header-content">
+                            <h1>My App</h1>
+                        </div>
+                    </header>
+
+                    <!-- Integrated Mobile Metrics -->
+                    <div class="mobile-metrics-bar">
+                        <div class="m-metric">
+                            <span class="m-label">SAVED</span>
+                            <span id="m-reduction" class="m-value">0 B</span>
+                        </div>
+                        <div class="m-metric">
+                            <span class="m-label">GAIN</span>
+                            <span id="m-ratio" class="m-value">1.0x</span>
+                        </div>
+                        <div class="m-metric accent">
+                            <span class="m-label">AXIOM</span>
+                            <span id="m-efficiency" class="m-value">-%</span>
+                        </div>
+                    </div>
+
+
+                    <main class="profile-content" id="profileContent">
+                        <div class="empty-state">
+                            <img src="C:/Users/ANGELA MARIYA/.gemini/antigravity/brain/d62db91e-117c-44e0-a030-b97d6cca56d1/mobile_empty_state_green_v3_1769901663154.png"
+                                alt="Select a Screen">
+                            <p>Ready to Analyze? Select a user and app context below to begin.</p>
+                        </div>
+                    </main>
+
+                    <div class="app-controls">
+                        <!-- Controls Grid -->
+                        <div class="controls-grid">
+                            <div class="control-group">
+                                <label>Simulation User</label>
+                                <div class="custom-select-wrapper" id="userDropdown">
+                                    <div class="custom-select-trigger">
+                                        <span>John Doe</span>
+                                        <div class="arrow"></div>
+                                    </div>
+                                    <div class="custom-options">
+                                        <div class="custom-option selected" data-value="1">John Doe</div>
+                                        <div class="custom-option" data-value="2">Jane Smith</div>
+                                        <div class="custom-option" data-value="3">Bob Johnson</div>
+                                    </div>
+                                </div>
+                                <select id="userSelector" style="display: none;">
+                                    <option value="1">John Doe</option>
+                                    <option value="2">Jane Smith</option>
+                                    <option value="3">Bob Johnson</option>
+                                </select>
+                            </div>
+                            <div class="control-group">
+                                <label>App Context</label>
+                                <div class="custom-select-wrapper" id="platformDropdown">
+                                    <div class="custom-select-trigger">
+                                        <span>Social Media</span>
+                                        <div class="arrow"></div>
+                                    </div>
+                                    <div class="custom-options">
+                                        <div class="custom-option selected" data-value="social">Social Media</div>
+                                        <div class="custom-option" data-value="ecommerce">E-Commerce</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <select id="platformSelector" style="display: none;">
+                                <option value="social">Social Media</option>
+                                <option value="ecommerce">E-Commerce</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="fetchBtn" class="primary-btn">Analyze & Fetch Data</button>
+
+                    <!-- IOS HOME INDICATOR -->
+                    <div class="home-indicator"></div>
+                </div>
+            </div>
+        </div>
+        <div class="phone-shadow"></div>
+    </div>
+    </div>
+
+    <script src="app.js?v=8"></script>
+</body>
+
+</html>
