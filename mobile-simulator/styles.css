@@ -464,7 +464,7 @@ body {
 }
 
 /* JSON Viewer Professional Stream */
-.json-viewer.axiom-border {
+.json-viewer.greenql-border {
     border-top: 4px solid var(--primary-color);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }

@@ -186,11 +186,17 @@ async function runComparison() {
             console.log("Fetching Direct...");
             const jsonDirect = await safeFetchJson(BACKEND_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ query })
-            }, 2000);
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ query, operationName: null })
+            }, 15000);
             directDataStr = JSON.stringify(jsonDirect);
             console.log("Direct Fetch Success");
+
+            // Small delay to prevent hitting the free-tier server with parallel sibling requests
+            await new Promise(r => setTimeout(r, 800));
         } catch (e) {
             console.warn("Backend direct fetch failed.", e);
         }
@@ -206,11 +212,12 @@ async function runComparison() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'X-Screen-Name': screenName,
                     'X-Platform-Type': platform
                 },
-                body: JSON.stringify({ query })
-            }, 2000);
+                body: JSON.stringify({ query, operationName: null })
+            }, 15000);
 
             optDataStr = JSON.stringify(jsonOpt);
             console.log("Middleware Fetch Success");
@@ -242,9 +249,12 @@ async function runComparison() {
             try {
                 jsonDirectSim = await safeFetchJson(MIDDLEWARE_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ query })
-                }, 2000);
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ query, operationName: null })
+                }, 15000);
             } catch (e) {
                 console.warn("Baseline simulation fetch failed. Using synthetic full baseline.", e);
                 jsonDirectSim = {
@@ -604,10 +614,16 @@ function countFields(obj) {
 }
 
 // Wrapper for Fetch with Timeout (Headers + Body)
-async function safeFetchJson(url, options, timeout = 2000) {
+async function safeFetchJson(url, options, timeout = 15000) {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
     if (!options) options = {};
+    if (!options.headers) options.headers = {};
+
+    // Ensure basic headers are present
+    options.headers['Accept'] = 'application/json';
+    options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/json';
+
     options.signal = controller.signal;
 
     try {
