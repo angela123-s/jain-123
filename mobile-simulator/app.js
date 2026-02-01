@@ -1,8 +1,8 @@
 // Mobile Simulator - Screen Comparison Logic
 
 // Endpoints
-const MIDDLEWARE_URL = 'http://10.10.22.206:5000/graphql';
-const BACKEND_URL = 'http://10.10.23.38:4000/graphql';
+const MIDDLEWARE_URL = 'https://hackathon-rqpy.onrender.com/graphql';
+const BACKEND_URL = 'https://hackathon-rqpy.onrender.com/graphql';
 
 // DOM Elements
 const fetchBtn = document.getElementById('fetchBtn');
